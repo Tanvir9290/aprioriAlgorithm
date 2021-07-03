@@ -1,0 +1,5 @@
+# aprioriAlgorithm
+projectProgress
+
+# Difficulties Facing
+* 
