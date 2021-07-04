@@ -13,6 +13,8 @@ transactions = []
 for i in range(0,10):
     transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
 
+print(transactions)
+
 count = len(transactions)
 
 def uniqueCombinations(list_elements,comb):
@@ -39,7 +41,7 @@ def checkMin(checkArr):
     for i in range(0,lenArr):
         items.add(checkArr[i])
         for j in range(0,count):
-            transac.add(transactions[j])
+            transac.add(set(transactions[j]))
             comp = transac.issuperset(items)
             if comp is True:
                 cnt += 1
@@ -58,5 +60,10 @@ for i in transactions:
         maxLen = len(i)
         
 oneComb = uniqueInd(transactions)
+
+print(oneComb)
+
 oneCombMin = checkMin(oneComb)
+
+
 
