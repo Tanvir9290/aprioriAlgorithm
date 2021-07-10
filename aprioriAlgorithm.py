@@ -19,8 +19,21 @@ for i in range(0,100):
 
 count = len(transactions)
 
-def uniqueCombinations(list_elements, comb):
-    l = list(itertools.combinations(list_elements, comb))
+def moreCombinations(list_elements,size):
+    retComb = []
+    length = len(list_elements)
+    for i in range(length):
+        for j in range(i+1,length):
+            temp1 = set(list_elements[i])
+            temp2 = set(list_elements[j])
+            temp3 = temp1.union(temp2)
+            if len(temp3) == size:
+                retComb.append(set(list(temp3)))
+    
+    return retComb
+
+def uniqueCombinations(list_elements):
+    l = list(itertools.combinations(list_elements, 2))
     s = set(l)
     return list(s)
 
@@ -43,12 +56,8 @@ def checkMin(checkArr):
         dic[item] = 0
         
         for transaction in transactions:
-            #print (transaction)
-            #transac.add(transaction)
-            #print (transaction)
+
             transac = set(transaction)
-            #print(transac)
-            #print(items)
 
             if transac.issuperset(items):
                 dic[item] += 1
@@ -59,8 +68,8 @@ def checkMin(checkArr):
         if dic[item] < minSup:
             del dic[item]
             
-    print (dic)
-    print (retArr)
+    #print (dic)
+    #print (retArr)
         #cnt = 0
         #items.clear()
         #transac.clear()
@@ -72,12 +81,18 @@ for i in transactions:
         maxLen = len(i)
         
 oneComb = uniqueInd(transactions)
-#checkMin(oneComb)
-twoComb = uniqueCombinations(oneComb,2)
+#print(oneComb)
+twoComb = uniqueCombinations(oneComb)
+
 twoComb = checkMin(twoComb)
-for i in twoComb:
-    print(set(i))
-#print(twoComb)
-#checkMin(twoComb)
-#oneCombMin = checkMin(oneComb)
+print(twoComb)
+threeComb = moreCombinations(twoComb,3)
+#threeComb = checkMin(threeComb)
+print(threeComb)
+
+#twoComb = checkMin(twoComb)
+#for i in twoComb:
+    #print(set(i))
+
+
 
