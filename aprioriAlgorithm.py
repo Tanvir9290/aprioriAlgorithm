@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 import itertools as itertools
 
-#minSup = int(input("Enter minimum support\n:- "))
-minSup = 1
+minSup = int(input("Enter minimum support\n:- "))
 
 maxLen = 0
 
@@ -13,7 +12,7 @@ df.fillna(0, inplace=True)
 #print (df)
 
 transactions = []
-for i in range(0,10):
+for i in range(0,100):
     transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
 
 #print (transactions)
@@ -34,34 +33,51 @@ def uniqueInd(mainArr):
     return comArr
 
 def checkMin(checkArr):
-    items = set()
+
+    retArr = []
     dic = {}
     
     for item in checkArr:
-        items.add(item)
-        dic[item] = 1
+        items = set(item)
+        #print(items)
+        dic[item] = 0
         
         for transaction in transactions:
             #print (transaction)
             #transac.add(transaction)
             #print (transaction)
             transac = set(transaction)
+            #print(transac)
+            #print(items)
+
             if transac.issuperset(items):
                 dic[item] += 1
-    
+        
+        items.clear()
+        if dic[item] >= minSup:
+            retArr.append(item)
         if dic[item] < minSup:
             del dic[item]
             
     print (dic)
+    print (retArr)
         #cnt = 0
         #items.clear()
         #transac.clear()
         
-    #return checkArr               
+    return retArr               
     
 for i in transactions:
     if len(i) > maxLen:
         maxLen = len(i)
         
 oneComb = uniqueInd(transactions)
-oneCombMin = checkMin(oneComb)
+#checkMin(oneComb)
+twoComb = uniqueCombinations(oneComb,2)
+twoComb = checkMin(twoComb)
+for i in twoComb:
+    print(set(i))
+#print(twoComb)
+#checkMin(twoComb)
+#oneCombMin = checkMin(oneComb)
+
