@@ -2,7 +2,6 @@
 projectProgress
 
 # Difficulties Facing
-* After getting two combination and then subtracting items not meeting minimum support and then making three combination from those items.
-
+* moreCombinations always returning sets with curly braces in it. Because of that our checkMin function is not working with those items. Returning errors like unable hash type something like that.
 # Source
 https://www.kaggle.com/devchauhan1/market-basket-optimisationcsv
