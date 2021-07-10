@@ -2,22 +2,25 @@ import numpy as np
 import pandas as pd
 import itertools as itertools
 
-minSup = int(input("Enter minimum support\n:- "))
+#minSup = int(input("Enter minimum support\n:- "))
+minSup = 1
 
 maxLen = 0
 
 df = pd.read_csv('Market_Basket_Optimisation.csv',header=None)
-df.fillna(0,inplace=True)
+df.fillna(0, inplace=True)
+
+#print (df)
 
 transactions = []
 for i in range(0,10):
     transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
 
-print(transactions)
+#print (transactions)
 
 count = len(transactions)
 
-def uniqueCombinations(list_elements,comb):
+def uniqueCombinations(list_elements, comb):
     l = list(itertools.combinations(list_elements, comb))
     s = set(l)
     return list(s)
@@ -28,42 +31,37 @@ def uniqueInd(mainArr):
         for j in i:
             if j not in comArr:
                 comArr.append(j)
-    
     return comArr
 
 def checkMin(checkArr):
-    lenArr = len(checkArr)
     items = set()
-    transac = set()
-    comp = False
-    cnt = 0
+    dic = {}
     
-    for i in range(0,lenArr):
-        items.add(checkArr[i])
-        for j in range(0,count):
-            transac.add(set(transactions[j]))
-            comp = transac.issuperset(items)
-            if comp is True:
-                cnt += 1
-            transac.clear()
-        if cnt < minSup:
-            checkArr.pop(i)
+    for item in checkArr:
+        items.add(item)
+        dic[item] = 1
         
-        cnt = 0
-        items.clear()
-        transac.clear()
+        for transaction in transactions:
+            #print (transaction)
+            #transac.add(transaction)
+            #print (transaction)
+            transac = set(transaction)
+            if transac.issuperset(items):
+                dic[item] += 1
+    
+        if dic[item] < minSup:
+            del dic[item]
+            
+    print (dic)
+        #cnt = 0
+        #items.clear()
+        #transac.clear()
         
-    return checkArr               
+    #return checkArr               
     
 for i in transactions:
     if len(i) > maxLen:
         maxLen = len(i)
         
 oneComb = uniqueInd(transactions)
-
-print(oneComb)
-
 oneCombMin = checkMin(oneComb)
-
-
-
