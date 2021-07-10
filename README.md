@@ -2,8 +2,7 @@
 projectProgress
 
 # Difficulties Facing
-* In the checkMin function we are checking how many times a combination is occurs in the transactions.
-* But it always returning out of bound message if we tried to access our main transactions data.
+* After getting two combination and then subtracting items not meeting minimum support and then making three combination from those items.
 
 # Source
 https://www.kaggle.com/devchauhan1/market-basket-optimisationcsv
