@@ -3,16 +3,18 @@ import pandas as pd
 import itertools as itertools
 
 minSup = int(input("Enter minimum support\n:- "))
-
 maxLen = 0
 
+#import dataset
 df = pd.read_csv('Market_Basket_Optimisation.csv',header=None)
 df.fillna(0, inplace=True)
 
+#convert dataset into array
 transactions = []
-for i in range(0,100):
-    transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
+for i in range(0,1000):
+    transactions.append([str(df.values[i,j]) for j in range(0,6) if str(df.values[i,j])!='0'])
 
+#creates three or more combination of item pair
 def moreCombinations(list_elements,size):
     retComb = []
     length = len(list_elements)
@@ -29,6 +31,7 @@ def moreCombinations(list_elements,size):
     retComb = set(retComb)
     return list(retComb)
 
+#checks minimum support for one pair of items
 def oneCombMinCheck(checkArray):
     retArr = []
     dict = {}
@@ -46,11 +49,13 @@ def oneCombMinCheck(checkArray):
     retArr = set(retArr)
     return list(retArr)
 
+#creates combination of two pair of items
 def uniqueCombinations(list_elements):
     l = list(itertools.combinations(list_elements, 2))
     s = set(l)
     return list(s)
 
+#returns single pair of items from transaction
 def uniqueInd(mainArr):
     comArr = []
     for i in mainArr:
@@ -60,6 +65,7 @@ def uniqueInd(mainArr):
     comArr = set(comArr)
     return list(comArr)
 
+#checks combination of items minimum support 
 def checkMin(checkArr):
     retArr = []
     dic = {}
@@ -75,13 +81,14 @@ def checkMin(checkArr):
         
         if dic[item] < minSup:
             del dic[item]
+
     for i in dic.keys():
         retArr.append(i)
-    #print (dic)
-    #print (retArr)
+
     retArr = set(retArr)  
-    return list(retArr)               
-    
+    return list(retArr)  
+             
+#determine maximum pair available in transaction   
 for i in transactions:
     if len(i) > maxLen:
         maxLen = len(i)
@@ -92,18 +99,23 @@ oneComb = oneCombMinCheck(oneComb)
 twoComb = uniqueCombinations(oneComb)
 twoComb = checkMin(twoComb)
 #print(twoComb)
-threeComb = moreCombinations(twoComb,3)
-threeComb = checkMin(threeComb)
-print(threeComb)
-'''
-fourComb = moreCombinations(threeComb,4)
-print(fourComb)'''
-'''fiveComb = moreCombinations(threeComb,5)
-print(fiveComb)
-'''
-#twoComb = checkMin(twoComb)
-#for i in twoComb:
-    #print(set(i))
+resultSet= []
+resultSet.append(oneComb)
+resultSet.append(twoComb)
 
+#Creates pair of items and checks minimum support for that pair at the same time
+for i in range(3,maxLen+1):
+    tempComb = moreCombinations(resultSet[i-2],i)
+    
+    if len(tempComb) >= 1:
+        tempComb = checkMin(tempComb)
+        if len(tempComb) == 0:
+            break
+        else:
+            resultSet.append(tempComb)
+    else:
+        break
 
+print("Our maximum pair of items which meets minimum support")
+print(resultSet[-1])
 
