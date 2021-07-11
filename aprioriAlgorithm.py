@@ -9,15 +9,9 @@ maxLen = 0
 df = pd.read_csv('Market_Basket_Optimisation.csv',header=None)
 df.fillna(0, inplace=True)
 
-#print (df)
-
 transactions = []
-for i in range(0,200):
-    transactions.append([str(df.values[i,j]) for j in range(0,5) if str(df.values[i,j])!='0'])
-
-#print (transactions)
-
-count = len(transactions)
+for i in range(0,100):
+    transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
 
 def moreCombinations(list_elements,size):
     retComb = []
@@ -27,9 +21,10 @@ def moreCombinations(list_elements,size):
             temp1 = set(list_elements[i])
             temp2 = set(list_elements[j])
             temp3 = temp1.union(temp2)
+            temp3 = sorted(temp3)
             
             if len(temp3) == size:
-                if temp3 not in retComb:
+                if tuple(temp3) not in retComb:
                     retComb.append(tuple(temp3))
     retComb = set(retComb)
     return list(retComb)
@@ -42,8 +37,10 @@ def oneCombMinCheck(checkArray):
         for transec in transactions:
             if item in transec:
                 dict[item] += 1
-        if dict[item] < checkMin:
+        
+        if dict[item] < minSup:
             del dict[item]
+    
     for i in dict.keys():
         retArr.append(i)
     retArr = set(retArr)
@@ -60,25 +57,22 @@ def uniqueInd(mainArr):
         for j in i:
             if j not in comArr:
                 comArr.append(j)
-    return comArr
+    comArr = set(comArr)
+    return list(comArr)
 
 def checkMin(checkArr):
-
     retArr = []
     dic = {}
     
     for item in checkArr:
         items = set(item)
-        #print(items)
         dic[item] = 0
-        
-        for transaction in transactions:
 
+        for transaction in transactions:
             transac = set(transaction)
             if transac.issuperset(items):
                 dic[item] += 1
-
-        items.clear()
+        
         if dic[item] < minSup:
             del dic[item]
     for i in dic.keys():
@@ -94,14 +88,14 @@ for i in transactions:
         
 oneComb = uniqueInd(transactions)
 oneComb = oneCombMinCheck(oneComb)
-
-'''twoComb = uniqueCombinations(oneComb)
+#print(oneComb)
+twoComb = uniqueCombinations(oneComb)
 twoComb = checkMin(twoComb)
 #print(twoComb)
 threeComb = moreCombinations(twoComb,3)
-print(threeComb)
 threeComb = checkMin(threeComb)
 print(threeComb)
+'''
 fourComb = moreCombinations(threeComb,4)
 print(fourComb)'''
 '''fiveComb = moreCombinations(threeComb,5)
