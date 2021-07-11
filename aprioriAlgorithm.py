@@ -12,14 +12,15 @@ df.fillna(0, inplace=True)
 #print (df)
 
 transactions = []
-for i in range(0,100):
-    transactions.append([str(df.values[i,j]) for j in range(0,4) if str(df.values[i,j])!='0'])
+for i in range(0,200):
+    transactions.append([str(df.values[i,j]) for j in range(0,5) if str(df.values[i,j])!='0'])
 
 #print (transactions)
 
 count = len(transactions)
 
 def moreCombinations(list_elements,size):
+    print(list_elements)
     retComb = []
     length = len(list_elements)
     for i in range(length):
@@ -27,10 +28,12 @@ def moreCombinations(list_elements,size):
             temp1 = set(list_elements[i])
             temp2 = set(list_elements[j])
             temp3 = temp1.union(temp2)
+            
             if len(temp3) == size:
-                retComb.append(set(list(temp3)))
-    
-    return retComb
+                if temp3 not in retComb:
+                    retComb.append(tuple(temp3))
+    retComb = set(retComb)
+    return list(retComb)
 
 def uniqueCombinations(list_elements):
     l = list(itertools.combinations(list_elements, 2))
@@ -63,18 +66,17 @@ def checkMin(checkArr):
                 dic[item] += 1
         
         items.clear()
-        if dic[item] >= minSup:
-            retArr.append(item)
         if dic[item] < minSup:
             del dic[item]
-            
+    for i in dic.keys():
+        retArr.append(i)
     #print (dic)
     #print (retArr)
         #cnt = 0
         #items.clear()
         #transac.clear()
-        
-    return retArr               
+    retArr = set(retArr)  
+    return list(retArr)               
     
 for i in transactions:
     if len(i) > maxLen:
@@ -82,14 +84,20 @@ for i in transactions:
         
 oneComb = uniqueInd(transactions)
 #print(oneComb)
-twoComb = uniqueCombinations(oneComb)
-
-twoComb = checkMin(twoComb)
+twoComb = moreCombinations(oneComb,2)
 print(twoComb)
+'''twoComb = checkMin(twoComb)
+#print(twoComb)
 threeComb = moreCombinations(twoComb,3)
-#threeComb = checkMin(threeComb)
 print(threeComb)
-
+threeComb = checkMin(threeComb)
+print(threeComb)
+fourComb = moreCombinations(threeComb,4)
+print(fourComb)
+'''
+'''fiveComb = moreCombinations(threeComb,5)
+print(fiveComb)
+'''
 #twoComb = checkMin(twoComb)
 #for i in twoComb:
     #print(set(i))
