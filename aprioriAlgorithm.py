@@ -18,13 +18,16 @@ for i in range(0,500):
 
 
 def get_power_set(s):
-  power_set=[[]]
-  for elem in s:
-    # iterate over the sub sets so far
-    for sub_set in power_set:
-      # add a new subset consisting of the subset at hand added elem
-      power_set=power_set+[list(sub_set)+[elem]]
-  return power_set
+    power_set=[[]]
+    retArr = []
+    for elem in s:
+        # iterate over the sub sets so far
+        for sub_set in power_set:
+            # add a new subset consisting of the subset at hand added elem
+            power_set=power_set+[list(sub_set)+[elem]]
+
+
+    return power_set
 
 #creates three or more combination of item pair
 def moreCombinations(list_elements,size):
@@ -70,7 +73,12 @@ def oneCombMinCheck(checkArray):
 #creates combination of two pair of items
 def uniqueCombinations(list_elements):
     l = list(itertools.combinations(list_elements, 2))
-    s = set(l)
+    arrRet= []
+    for i in l:
+        arrRet.append(tuple(sorted(i)))
+    
+    s = set(arrRet)
+
     return list(s)
 
 #returns single pair of items from transaction
@@ -87,17 +95,16 @@ def uniqueInd(mainArr):
 def checkMin(checkArr):
     retArr = []
     dic = {}
+    global itemsCombRepeat
     
     for item in checkArr:
         items = set(item)
-        dic[item] = 0
-        global itemsCombRepeat
+        dic[item] = 0    
         itemsCombRepeat[item] = 0
         for transaction in transactions:
             transac = set(transaction)
             if transac.issuperset(items):
                 dic[item] += 1
-
                 itemsCombRepeat[item] += 1
    
         if dic[item] < minSup:
@@ -142,8 +149,30 @@ for i in range(3,maxLen+1):
 print("Our maximum pair of items which meets minimum support")
 #print(resultSet[-1])
 
-for i in resultSet[-1]:
-    print(sorted(get_power_set(i)))
+aprioriRules = {}
+aprioriConfidence = {}
 
-print(itemsCombRepeat)
+for i in resultSet[-1]:
+    aprioriRules[i] = 0
+    temp = []
+    for j in get_power_set(i):
+        
+        temp.append(tuple(j))
+        if tuple(j) == ():
+            temp.pop()
+        if tuple(j) == i:
+            temp.pop()
+    
+    aprioriRules[i] = temp
+
+for keys in aprioriRules.keys():
+    print(itemsCombRepeat[keys])
+    for values in aprioriRules[keys]:
+        if len(values) == 1:
+            for extract in values:
+                print(extract)
+                print(itemsCombRepeat[extract])
+        else:
+            print(itemsCombRepeat[values])
+
 
