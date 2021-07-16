@@ -4,6 +4,8 @@ import itertools as itertools
 
 minSup = int(input("Enter minimum support\n:- "))
 maxLen = 0
+CombRepeat = 0
+itemsCombRepeat = {}
 
 #import dataset
 df = pd.read_csv('Market_Basket_Optimisation.csv',header=None)
@@ -11,8 +13,18 @@ df.fillna(0, inplace=True)
 
 #convert dataset into array
 transactions = []
-for i in range(0,100):
+for i in range(0,500):
     transactions.append([str(df.values[i,j]) for j in range(0,5) if str(df.values[i,j])!='0'])
+
+
+def get_power_set(s):
+  power_set=[[]]
+  for elem in s:
+    # iterate over the sub sets so far
+    for sub_set in power_set:
+      # add a new subset consisting of the subset at hand added elem
+      power_set=power_set+[list(sub_set)+[elem]]
+  return power_set
 
 #creates three or more combination of item pair
 def moreCombinations(list_elements,size):
@@ -33,13 +45,19 @@ def moreCombinations(list_elements,size):
 
 #checks minimum support for one pair of items
 def oneCombMinCheck(checkArray):
+    
     retArr = []
     dict = {}
     for item in checkArray:
         dict[item] = 0
+        global itemsCombRepeat
+        itemsCombRepeat[item] = 0
+
         for transec in transactions:
             if item in transec:
                 dict[item] += 1
+
+                itemsCombRepeat[item] += 1
         
         if dict[item] < minSup:
             del dict[item]
@@ -73,14 +91,19 @@ def checkMin(checkArr):
     for item in checkArr:
         items = set(item)
         dic[item] = 0
-
+        global itemsCombRepeat
+        itemsCombRepeat[item] = 0
         for transaction in transactions:
             transac = set(transaction)
             if transac.issuperset(items):
                 dic[item] += 1
-        
+
+                itemsCombRepeat[item] += 1
+   
         if dic[item] < minSup:
             del dic[item]
+        if itemsCombRepeat[item] == 0:
+            del itemsCombRepeat[item]
 
     for i in dic.keys():
         retArr.append(i)
@@ -117,5 +140,10 @@ for i in range(3,maxLen+1):
         break
 
 print("Our maximum pair of items which meets minimum support")
-print(resultSet[-1])
+#print(resultSet[-1])
+
+for i in resultSet[-1]:
+    print(sorted(get_power_set(i)))
+
+print(itemsCombRepeat)
 
