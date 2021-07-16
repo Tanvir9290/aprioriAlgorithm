@@ -3,6 +3,8 @@ import pandas as pd
 import itertools as itertools
 
 minSup = int(input("Enter minimum support\n:- "))
+confidenceValue = float(input("Enter confident value:\n:- "))
+
 maxLen = 0
 CombRepeat = 0
 itemsCombRepeat = {}
@@ -147,7 +149,7 @@ for i in range(3,maxLen+1):
         break
 
 print("Our maximum pair of items which meets minimum support")
-#print(resultSet[-1])
+print(resultSet[-1])
 
 aprioriRules = {}
 aprioriConfidence = {}
@@ -166,13 +168,35 @@ for i in resultSet[-1]:
     aprioriRules[i] = temp
 
 for keys in aprioriRules.keys():
-    print(itemsCombRepeat[keys])
+    temp = 0
+    flag = []
     for values in aprioriRules[keys]:
         if len(values) == 1:
             for extract in values:
-                print(extract)
-                print(itemsCombRepeat[extract])
+                temp = itemsCombRepeat[keys] / itemsCombRepeat[extract]
+                if temp >= confidenceValue:
+                    flag.append(extract)
+                    flag.append('->')
+                    flag.append(keys)
+                    flag.append('subtract')
+                    flag.append(extract)
+                    aprioriConfidence[tuple(flag)] = "Confident:"+""+str(temp)            
+                flag.clear()
         else:
-            print(itemsCombRepeat[values])
+            temp = itemsCombRepeat[keys] / itemsCombRepeat[values]
+            if temp >= confidenceValue:
+                flag.append(values)
+                flag.append('->')
+                flag.append(keys)
+                flag.append('subtract')
+                flag.append(values)
+                aprioriConfidence[tuple(flag)] = "Confident:"+""+str(temp)
+            flag.clear()
 
+print("\n\nRules generated from those item sets:\n")
 
+for keys,values in aprioriConfidence.items():
+    print("rules->")
+    print(keys)
+    print(values)
+    print("\n\n")
