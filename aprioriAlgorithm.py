@@ -11,8 +11,8 @@ df.fillna(0, inplace=True)
 
 #convert dataset into array
 transactions = []
-for i in range(0,1000):
-    transactions.append([str(df.values[i,j]) for j in range(0,6) if str(df.values[i,j])!='0'])
+for i in range(0,100):
+    transactions.append([str(df.values[i,j]) for j in range(0,5) if str(df.values[i,j])!='0'])
 
 #creates three or more combination of item pair
 def moreCombinations(list_elements,size):
